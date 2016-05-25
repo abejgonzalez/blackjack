@@ -184,12 +184,12 @@ int PlayingField::checkPlayerTotal(){
 
 void PlayingField::printField(){
 	std::cout << "Dealers Cards:" << std::endl;
-	for (int i = 0; i < field->dealer_Cards.size(); i++){
-		field->dealer_Cards[i].printCardType();
+	for (int i = 0; i < this->dealer_Cards.size(); i++){
+		this->dealer_Cards[i].printCardType();
 	}
 
 	std::cout << "Players Cards:" << std::endl;
-	for (int i = 0; i < field->player_Cards.size(); i++){
-		field->player_Cards[i].printCardType();
+	for (int i = 0; i < this->player_Cards.size(); i++){
+		this->player_Cards[i].printCardType();
 	}
 }

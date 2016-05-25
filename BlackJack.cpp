@@ -1,9 +1,9 @@
 #include "Deck.h"
 #include "Card.h"
+#include "Client.h"
+#include "Server.h"
 #include "Playingfield.h"
 #include <iostream>
-#include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib");
 
 /*Enum for the game state machine*/
 enum State{
@@ -29,6 +29,8 @@ State currentState;
 int game_type;
 bool done = false;
 PlayingField* field;
+Server * m_server;
+Client * m_client;
 
 /*General Functions*/
 void init();
@@ -263,23 +265,22 @@ int main(void){
 
 			winsockInit();
 
-			SOCKADDR_IN addr;
-			int addrLen = sizeof(addr);
-			addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-			addr.sin_port = htons(1111);
-			addr.sin_family = AF_INET;
-
-			SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
-			if (connect(Connection, (SOCKADDR*)&addr, sizeof(addr)) != 0){
-				MessageBoxA(NULL, "Failed to connect", "Error", MB_OK | MB_ICONERROR);
-				return 0;
+			m_client = new Client("127.0.0.1", 1111);
+			
+			if (!m_client->connectToServer()){
+				/*Error connecting to the server*/
 			}
 			else{
-				std::cout << "Connected" << std::endl;
-				char recievedMess[256];
-				recv(Connection, recievedMess, sizeof(recievedMess), NULL);
-				std::cout << "I recieved: " << recievedMess << std::endl;
+				std::cout << "You have connected to the host" << std::endl;
+
+				/*
+				//Get message back from the server
+				char recievedMessage[256];
+				m_client->retrieveFromServer(recievedMessage, sizeof(recievedMessage));
+
+				std::cout << "I recieved: " << recievedMessage << std::endl;
 				system("pause");
+				*/
 			}
 
 
@@ -289,38 +290,32 @@ int main(void){
 			/*Set up a server for a client to connect to.*/
 
 			winsockInit();
-			SOCKADDR_IN addr;
-			int addrLen = sizeof(addr);
-			addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");//Address
-			addr.sin_port = htons(1111); //Port number
-			addr.sin_family = AF_INET; //IPv4
 
-			SOCKET sListen = socket(AF_INET, SOCK_STREAM, NULL); //Create socket
-			bind(sListen, (SOCKADDR*)&addr, sizeof(addr)); //Bind the address to the socket
-			listen(sListen, SOMAXCONN); //Listen for connection
+			m_server = new Server("127.0.0.1", 1111);
 
-			SOCKET newConnection;
-			newConnection = accept(sListen, (SOCKADDR*)&addr, &addrLen);
-			if (newConnection == 0){
-				std::cout << "Failed to accept the clients connection." << std::endl;
+			m_server->listenForClient();
+
+			if (!m_server->acceptClient()){
+				std::cout << "Failed to accept the other connection." << std::endl;
 			}
 			else{
-				std::cout << "Client connected" << std::endl;
-				char message[256] = "This is the message to send to the client";
-				send(newConnection, message, sizeof(message), NULL);
+				std::cout << "You have connected to the other player" << std::endl;
+				
+				/* 
+				//Send message to the client
+				char sendMessage[256] = "Welcome player. Good luck! - Host";
+				m_server->sendToClient(sendMessage, sizeof(sendMessage));
+				*/
 			}
-			system("pause");
-			return 0;
-
 		}
 			break;
 		}
 	}
 
 	/*Clean up memory leaks*/
-	if (field){
-		delete field;
-	}
+	delete field;
+	delete m_client;
+	delete m_server;
 }
 
 void init(){
