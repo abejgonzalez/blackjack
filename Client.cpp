@@ -29,6 +29,10 @@ bool Client::retrieveFromServer(char* location, int lenLocation){
 	}
 }
 
+void Client::sendToServer(char* location, int lenLocation){
+	send(client, location, lenLocation, NULL);
+}
+
 Client::~Client(){
 
 }

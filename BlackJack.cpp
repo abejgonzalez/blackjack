@@ -273,14 +273,16 @@ int main(void){
 			else{
 				std::cout << "You have connected to the host" << std::endl;
 
-				/*
+				
 				//Get message back from the server
 				char recievedMessage[256];
 				m_client->retrieveFromServer(recievedMessage, sizeof(recievedMessage));
 
 				std::cout << "I recieved: " << recievedMessage << std::endl;
-				system("pause");
-				*/
+
+				char client_send_mess[256] = "Thanks for the invite. Lets play! - Client";
+				m_client->sendToServer(client_send_mess, sizeof(client_send_mess));
+				
 			}
 
 
@@ -301,11 +303,17 @@ int main(void){
 			else{
 				std::cout << "You have connected to the other player" << std::endl;
 				
-				/* 
+				
 				//Send message to the client
 				char sendMessage[256] = "Welcome player. Good luck! - Host";
 				m_server->sendToClient(sendMessage, sizeof(sendMessage));
-				*/
+				
+				system("pause");
+
+				char recievedMessage[256];
+				m_server->retrieveFromClient(recievedMessage, sizeof(recievedMessage));
+				std::cout << "I recieved: " << recievedMessage << std::endl;
+				system("pause");
 			}
 		}
 			break;

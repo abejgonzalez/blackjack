@@ -11,6 +11,7 @@ public:
 	void listenForClient();
 	bool acceptClient();
 	void sendToClient(char* location, int lenLocation);
+	bool retrieveFromClient(char* location, int lenLocation);
 	~Server();
 private:
 	SOCKADDR_IN addr;

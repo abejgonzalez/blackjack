@@ -30,6 +30,15 @@ void Server::sendToClient(char* location, int lenLocation){
 	send(connectServer, location, lenLocation, NULL);
 }
 
+bool Server::retrieveFromClient(char* location, int lenLocation){
+	if (recv(connectServer, location, lenLocation, NULL) != 0){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+
 Server::~Server()
 {
 }
