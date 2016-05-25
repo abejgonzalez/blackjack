@@ -3,6 +3,7 @@
 
 #include "Deck.h"
 #include <vector>
+#include <iostream>
 
 class PlayingField{
 	public:
@@ -13,6 +14,7 @@ class PlayingField{
 		void drawDealerCard();
 		void drawPlayerCard();
 		void clearField();
+		void printField();
 		bool checkPlayerValid();
 		bool checkDealerValid();
 		int checkDealerTotal();

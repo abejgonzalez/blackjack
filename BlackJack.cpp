@@ -5,6 +5,7 @@
 #include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib");
 
+/*Enum for the game state machine*/
 enum State{
 	opening,
 	game_type_choice,
@@ -23,29 +24,37 @@ enum State{
 	game_client_setup,
 };
 
+/*Local Variables*/
 State currentState;
 int game_type;
+bool done = false;
 PlayingField* field;
 
+/*General Functions*/
 void init();
 void blankScreen();
 void winsockInit();
 
 int main(void){
+	/*Initialize the statemachine and the gametype*/
 	init();
 
-	while (1){
+	/*StateMachine*/
+	while (!done){
 		switch (currentState){
 		case opening:{
-			std::cout << "Welcome to BlackJack" << std::endl;
-			/*Opening animation*/
+			/*Opening Sequence*/
 
+			std::cout << "Welcome to BlackJack" << std::endl;
 			currentState = game_type_choice;
 		}
 			break;
 
 		case game_type_choice:{
+			/*The game type choice selection*/
+
 			blankScreen();
+
 			std::cout << "Would you like to play against the dealer or another person" << std::endl;
 			std::cout << "Play against dealer - Click 1" << std::endl;
 			std::cout << "Play against another person - Click 2" << std::endl;
@@ -72,31 +81,28 @@ int main(void){
 			break;
 
 		case game_start_dealer:{
+			/*Game start against computer*/
 
+			/*Draw both player and dealer cards*/
 			field->drawDealerCard();
 			field->drawDealerCard();
 			field->drawPlayerCard();
 			field->drawPlayerCard();
 
 			blankScreen();
+
 			std::cout << "The field is set. Both the dealer and the player have both drawn two cards." << std::endl;
-			std::cout << "Dealers Cards:" << std::endl;
 
-			for (int i = 0; i < field->dealer_Cards.size(); i++){
-				field->dealer_Cards[i].printCardType();
-			}
-
-			std::cout << "Players Cards:" << std::endl;
-
-			for (int i = 0; i < field->player_Cards.size(); i++){
-				field->player_Cards[i].printCardType();
-			}
+			/*Print current cards*/
+			field->printField();
 
 			currentState = game_hit_question;
 		}
 			break;
 			
 		case game_hit_question:{
+			/*Hit state where player chooses to get a hit*/
+
 			char response = '/0';
 			std::cout << "Would you like to hit?" << std::endl;
 			std::cout << "Yes : y or No : n -------- ";
@@ -110,17 +116,8 @@ int main(void){
 				std::cout << "You drew a card." << std::endl;
 				field->drawPlayerCard();
 
-				std::cout << "Dealers Cards:" << std::endl;
-
-				for (int i = 0; i < field->dealer_Cards.size(); i++){
-					field->dealer_Cards[i].printCardType();
-				}
-
-				std::cout << "Players Cards:" << std::endl;
-
-				for (int i = 0; i < field->player_Cards.size(); i++){
-					field->player_Cards[i].printCardType();
-				}
+				/*Print current cards*/
+				field->printField();
 
 				/*Check if game is over*/
 				if (!field->checkPlayerValid()){
@@ -138,7 +135,11 @@ int main(void){
 			break;
 
 		case game_hit_dealer:{
+			/*Hit state where dealer draws cards until he is greater than or equal to 15*/
+
 			blankScreen();
+
+			/*Draw cards until total is greater than or equal to 15*/
 			while (field->checkDealerTotal() < 15){
 				std::cout << "The dealer total is less than 15. It draws a card" << std::endl;
 				field->drawDealerCard();
@@ -146,12 +147,13 @@ int main(void){
 				field->dealer_Cards.back().printCardType();
 			}
 
+			/*Print dealer cards*/
 			std::cout << "Dealers Cards:" << std::endl;
-
 			for (int i = 0; i < field->dealer_Cards.size(); i++){
 				field->dealer_Cards[i].printCardType();
 			}
 
+			/*Check if the dealer lost*/
 			if (!field->checkDealerValid()){
 				currentState = game_dealer_loss;
 			}
@@ -162,21 +164,15 @@ int main(void){
 			break;
 
 		case game_dealer_loss:{
+			/*Finish state for the PvComp gamemode - Dealer Lost*/
+
 			blankScreen();
+
 			std::cout << "The dealer lost with a score of " << field->checkDealerTotal() << ". Player won with score of " << field->checkPlayerTotal() << "." << std::endl;
 			std::cout << "Final Playing Field: " << std::endl;
 
-			std::cout << "Dealers Cards:" << std::endl;
-
-			for (int i = 0; i < field->dealer_Cards.size(); i++){
-				field->dealer_Cards[i].printCardType();
-			}
-
-			std::cout << "Players Cards:" << std::endl;
-
-			for (int i = 0; i < field->player_Cards.size(); i++){
-				field->player_Cards[i].printCardType();
-			}
+			/*Print current field*/
+			field->printField();
 
 			char response = '/0';
 			std::cout << "Would you like to play again?" << std::endl;
@@ -191,25 +187,22 @@ int main(void){
 			}
 			else{
 				std::cout << "Exiting" << std::endl;
+				/*Set done flag to exit statemachine*/
+				done = true;
 			}
 		}
 			break;
+
 		case game_player_loss:{
+			/*Finish state for the PvComp gamemode - Player Lost*/
+
 			blankScreen();
+
 			std::cout << "The player lost with a score of " << field->checkPlayerTotal() << ". Dealer won with score of " << field->checkDealerTotal() << "." << std::endl;
 			std::cout << "Final Playing Field: " << std::endl;
 
-			std::cout << "Dealers Cards:" << std::endl;
-
-			for (int i = 0; i < field->dealer_Cards.size(); i++){
-				field->dealer_Cards[i].printCardType();
-			}
-
-			std::cout << "Players Cards:" << std::endl;
-
-			for (int i = 0; i < field->player_Cards.size(); i++){
-				field->player_Cards[i].printCardType();
-			}
+			/*Print current field*/
+			field->printField();
 
 			char response = '/0';
 			std::cout << "Would you like to play again?" << std::endl;
@@ -224,10 +217,15 @@ int main(void){
 			}
 			else{
 				std::cout << "Exiting" << std::endl;
+				/*Set done flag to exit out of the statemachine*/
+				done = true;
 			}
 		}
 			break;
+
 		case game_compare_scores:{
+			/*Check both scores at the end of the hit rounds*/
+
 			if (field->checkDealerTotal() <= field->checkPlayerTotal()){
 				currentState = game_dealer_loss;
 			}
@@ -236,10 +234,14 @@ int main(void){
 			}
 		}
 			break;
-		case game_start_person:{
-			char choice = '\0';
 
-			std::cout << "Would you like to host or connect to a game.";
+		case game_start_person:{
+			/*Game start against another person over sockets*/
+
+			blankScreen();
+
+			char choice = '\0';
+			std::cout << "Would you like to host or connect to a game." << std::endl;
 			std::cout << "Host-h Connect-c ------ ";
 			std::cin >> choice;
 
@@ -255,7 +257,10 @@ int main(void){
 			}
 		}
 			break;
+
 		case game_client_setup:{
+			/*Set up a client connection to an available server*/
+
 			winsockInit();
 
 			SOCKADDR_IN addr;
@@ -281,7 +286,8 @@ int main(void){
 		}
 			break;
 		case game_server_setup:{
-			
+			/*Set up a server for a client to connect to.*/
+
 			winsockInit();
 			SOCKADDR_IN addr;
 			int addrLen = sizeof(addr);
@@ -309,6 +315,11 @@ int main(void){
 		}
 			break;
 		}
+	}
+
+	/*Clean up memory leaks*/
+	if (field){
+		delete field;
 	}
 }
 
