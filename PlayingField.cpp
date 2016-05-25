@@ -183,13 +183,17 @@ int PlayingField::checkPlayerTotal(){
 }
 
 void PlayingField::printField(){
-	std::cout << "Dealers Cards:" << std::endl;
-	for (int i = 0; i < this->dealer_Cards.size(); i++){
-		this->dealer_Cards[i].printCardType();
+	if (dealer_Cards.size() > 0){
+		std::cout << "Dealers Cards:" << std::endl;
+		for (int i = 0; i < this->dealer_Cards.size(); i++){
+			this->dealer_Cards[i].printCardType();
+		}
 	}
 
-	std::cout << "Players Cards:" << std::endl;
-	for (int i = 0; i < this->player_Cards.size(); i++){
-		this->player_Cards[i].printCardType();
+	if (player_Cards.size() > 0){
+		std::cout << "Players Cards:" << std::endl;
+		for (int i = 0; i < this->player_Cards.size(); i++){
+			this->player_Cards[i].printCardType();
+		}
 	}
 }
