@@ -1,0 +1,49 @@
+﻿Build started 5/24/2016 7:20:31 PM.
+     1>Project "C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\BlackJack.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt BlackJack.cpp Card.cpp Deck.cpp PlayingField.cpp
+         BlackJack.cpp
+     1>BlackJack.cpp(6): warning C4081: expected 'newline'; found ';'
+     1>BlackJack.cpp(84): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(90): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(99): warning C4305: 'initializing' : truncation from 'int' to 'char'
+     1>BlackJack.cpp(99): warning C4309: 'initializing' : truncation of constant value
+     1>BlackJack.cpp(114): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(120): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(150): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(170): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(176): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(180): warning C4305: 'initializing' : truncation from 'int' to 'char'
+     1>BlackJack.cpp(180): warning C4309: 'initializing' : truncation of constant value
+     1>BlackJack.cpp(203): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(209): warning C4018: '<' : signed/unsigned mismatch
+     1>BlackJack.cpp(213): warning C4305: 'initializing' : truncation from 'int' to 'char'
+     1>BlackJack.cpp(213): warning C4309: 'initializing' : truncation of constant value
+     1>BlackJack.cpp(268): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+                 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsock2.h(1850) : see declaration of 'inet_addr'
+     1>BlackJack.cpp(299): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+                 C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsock2.h(1850) : see declaration of 'inet_addr'
+         Card.cpp
+         Deck.cpp
+     1>Deck.cpp(23): warning C4018: '<' : signed/unsigned mismatch
+     1>Deck.cpp(29): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+         PlayingField.cpp
+     1>PlayingField.cpp(25): warning C4018: '<' : signed/unsigned mismatch
+     1>PlayingField.cpp(29): warning C4018: '<' : signed/unsigned mismatch
+     1>PlayingField.cpp(38): warning C4018: '<' : signed/unsigned mismatch
+     1>PlayingField.cpp(80): warning C4018: '<' : signed/unsigned mismatch
+     1>PlayingField.cpp(122): warning C4018: '<' : signed/unsigned mismatch
+     1>PlayingField.cpp(155): warning C4018: '<' : signed/unsigned mismatch
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\Release\BlackJack.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\Release\BlackJack.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\Release\BlackJack.lib" /MACHINE:X86 /SAFESEH Release\BlackJack.obj
+         Release\Card.obj
+         Release\Deck.obj
+         Release\PlayingField.obj
+         Generating code
+         Finished generating code
+         BlackJack.vcxproj -> C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\Release\BlackJack.exe
+     1>Done Building Project "C:\Users\Abraham\documents\visual studio 2013\Projects\BlackJack\BlackJack.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.68
