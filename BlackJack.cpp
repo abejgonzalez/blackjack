@@ -390,7 +390,8 @@ int main(void){
 				}
 
 				/*Send message to client that it is done choosing cards*/
-				m_server->sendToClient();
+				char data[256] = "Done";
+				m_server->sendToClient(data, sizeof(data));
 			}
 		}
 			break;
@@ -472,7 +473,8 @@ int main(void){
 				}
 
 				/*Send message to server that it is done choosing cards*/
-				m_client->sendToServer();
+				char data[256] = "Done";
+				m_client->sendToServer(data, sizeof(data));
 			}
 		}
 			break;
