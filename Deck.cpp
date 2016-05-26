@@ -5,6 +5,8 @@
 
 Deck::Deck()
 {
+	srand(time(NULL));
+
 	m_Deck.clear();
 	/*Add 52 cards to the deck*/
 	for (int i = 0; i <= 13; i++){
@@ -26,7 +28,6 @@ void Deck::printDeck(){
 }
 
 Card Deck::drawCard(){
-	srand(time(NULL));
 	int myRandNumber = rand() % 52;
 
 	Card temp = m_Deck[myRandNumber];

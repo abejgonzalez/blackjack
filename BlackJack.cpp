@@ -33,6 +33,7 @@ enum State{
 /*Local Variables*/
 State currentState;
 int game_type;
+int otherScore = 0;
 bool done = false;
 bool isServer = false;
 PlayingField* field;
@@ -57,7 +58,7 @@ int main(void){
 			std::cout << "Welcome to BlackJack" << std::endl;
 			currentState = game_type_choice;
 		}
-			break;
+					 break;
 
 		case game_type_choice:{
 			/*The game type choice selection*/
@@ -85,7 +86,7 @@ int main(void){
 
 			field = new PlayingField(new Deck);
 		}
-			break;
+							  break;
 
 		case game_start_dealer:{
 			/*Game start against computer*/
@@ -105,70 +106,70 @@ int main(void){
 
 			currentState = game_hit_question;
 		}
-			break;
-			
+							   break;
+
 		case game_hit_question:{
 			/*Hit state where player chooses to get a hit (Split between wireless and not)*/
-				char response = '/0';
-				std::cout << "Would you like to hit?" << std::endl;
-				std::cout << "Yes : y or No : n -------- ";
-				std::cin >> response;
+			char response = '\0';
+			std::cout << "Would you like to hit?" << std::endl;
+			std::cout << "Yes : y or No : n -------- ";
+			std::cin >> response;
 
-				if (response != 'y' && response != 'n'){
-					std::cout << "Error in response please try again." << std::endl;
+			if (response != 'y' && response != 'n'){
+				std::cout << "Error in response please try again." << std::endl;
+				currentState = game_hit_question;
+			}
+			else if (response == 'y'){
+				std::cout << "You drew a card." << std::endl;
+				field->drawPlayerCard();
+
+				/*Print current cards*/
+				field->printField();
+
+				/*Check if game is over*/
+				if (!field->checkPlayerValid()){
+					currentState = game_player_loss;
+				}
+				else{
 					currentState = game_hit_question;
 				}
-				else if (response == 'y'){
-					std::cout << "You drew a card." << std::endl;
-					field->drawPlayerCard();
-
-					/*Print current cards*/
-					field->printField();
-
-					/*Check if game is over*/
-					if (!field->checkPlayerValid()){
-						currentState = game_player_loss;
-					}
-					else{
-						currentState = game_hit_question;
-					}
-				}
-				else {
-					std::cout << "You chose to stay with your current hand" << std::endl;
-					currentState = game_hit_dealer;
-				}
+			}
+			else {
+				std::cout << "You chose to stay with your current hand" << std::endl;
+				currentState = game_hit_dealer;
+			}
 		}
-			break;
+							   break;
 
 		case game_hit_dealer:{
 			/*Hit state where dealer draws cards until he is greater than or equal to 15*/
 
-			
-				blankScreen();
 
-				/*Draw cards until total is greater than or equal to 15*/
-				while (field->checkDealerTotal() < 15){
-					std::cout << "The dealer total is less than 15. It draws a card" << std::endl;
-					field->drawDealerCard();
-					std::cout << "The dealer drew a ";
-					field->dealer_Cards.back().printCardType();
-				}
+			blankScreen();
 
-				/*Print dealer cards*/
-				std::cout << "Dealers Cards:" << std::endl;
-				for (int i = 0; i < field->dealer_Cards.size(); i++){
-					field->dealer_Cards[i].printCardType();
-				}
+			/*Draw cards until total is greater than or equal to 15*/
+			while (field->checkDealerTotal() < 15){
+				std::cout << "The dealer total is less than 15. It draws a card" << std::endl;
+				field->drawDealerCard();
+				std::cout << "The dealer drew a ";
+				field->dealer_Cards.back().printCardType();
+			}
 
-				/*Check if the dealer lost*/
-				if (!field->checkDealerValid()){
-					currentState = game_dealer_loss;
-				}
-				else{
-					currentState = game_compare_scores;
-				}
+			/*Print dealer cards*/
+			std::cout << "Dealers Cards:" << std::endl;
+			for (unsigned int i = 0; i < field->dealer_Cards.size(); i++){
+				field->dealer_Cards[i].printCardType();
+			}
+
+			/*Check if the dealer lost*/
+			if (!field->checkDealerValid()){
+				currentState = game_dealer_loss;
+			}
+			else{
+				currentState = game_compare_scores;
+			}
 		}
-			break;
+							 break;
 
 		case game_dealer_loss:{
 			/*Finish state for the PvComp gamemode - Dealer Lost*/
@@ -181,7 +182,7 @@ int main(void){
 			/*Print current field*/
 			field->printField();
 
-			char response = '/0';
+			char response = '\0';
 			std::cout << "Would you like to play again?" << std::endl;
 			std::cout << "Yes : y or No : n -------- ";
 			std::cin >> response;
@@ -198,7 +199,7 @@ int main(void){
 				done = true;
 			}
 		}
-			break;
+							  break;
 
 		case game_player_loss:{
 			/*Finish state for the PvComp gamemode - Player Lost*/
@@ -211,7 +212,7 @@ int main(void){
 			/*Print current field*/
 			field->printField();
 
-			char response = '/0';
+			char response = '\0';
 			std::cout << "Would you like to play again?" << std::endl;
 			std::cout << "Yes : y or No : n -------- ";
 			std::cin >> response;
@@ -228,7 +229,7 @@ int main(void){
 				done = true;
 			}
 		}
-			break;
+							  break;
 
 		case game_compare_scores:{
 			/*Check both scores at the end of the hit rounds*/
@@ -240,7 +241,7 @@ int main(void){
 				currentState = game_player_loss;
 			}
 		}
-			break;
+								 break;
 
 		case game_start_person:{
 			/*Game start against another person over sockets*/
@@ -256,14 +257,14 @@ int main(void){
 				std::cout << "Incorrect input. Try again" << std::endl;
 				currentState = game_start_person;
 			}
-			else if(choice == 'c'){
+			else if (choice == 'c'){
 				currentState = game_client_setup;
 			}
 			else{
 				currentState = game_server_setup;
 			}
 		}
-			break;
+							   break;
 
 		case game_client_setup:{
 			/*Set up a client connection to an available server*/
@@ -271,28 +272,39 @@ int main(void){
 			winsockInit();
 
 			m_client = new Client("127.0.0.1", 1111);
-			
+
 			isServer = false;
 
-			if (!m_client->connectToServer()){
+			char i = 0;
+			while (!m_client->connectToServer()){
 				/*Error connecting to the server*/
-				std::cout << "Failed to connect to server" << std::endl;
+				std::cout << "Waiting";
+				for (char j = 0; j < i; j++){
+					std::cout << ".";
+				}
+				if (i < 4){
+					i = i + 1;
+				}
+				else{
+					i = 0;
+				}
+				std::cout << std::endl;
 			}
-			else{
-				std::cout << "You have connected to the host" << std::endl;
 
-				/*Get message back from the server*/
-				char recievedMessage[256];
-				m_client->retrieveFromServer(recievedMessage, sizeof(recievedMessage));
+			std::cout << "You have connected to the host" << std::endl;
 
-				std::cout << "From Host: " << recievedMessage << std::endl;
+			/*Get message back from the server*/
+			char recievedMessage[256];
+			m_client->retrieveFromServer(recievedMessage, sizeof(recievedMessage));
 
-				currentState = game_client_hit;
-			}
+			std::cout << "From Host: " << recievedMessage << std::endl;
+
+			currentState = game_client_hit;
+
 
 
 		}
-			break;
+							   break;
 
 		case game_server_setup:{
 			/*Set up a server for a client to connect to.*/
@@ -311,7 +323,7 @@ int main(void){
 			}
 			else{
 				std::cout << "You have connected to the other player" << std::endl;
-				
+
 				/*Send message to the client*/
 				char sendMessage[256] = "Welcome player. Good luck! - Host";
 				m_server->sendToClient(sendMessage, sizeof(sendMessage));
@@ -319,7 +331,7 @@ int main(void){
 				currentState = game_client_hit;
 			}
 		}
-			break;
+							   break;
 
 		case game_server_hit:{
 			/*For the wireless side where the client plays first*/
@@ -354,47 +366,48 @@ int main(void){
 				currentState = game_comp_scores_cs;
 			}
 			else{
+				bool choose = true;
 
 				blankScreen();
 
 				/*Print current cards*/
 				field->printField();
 
-				char response = '/0';
-				std::cout << "Would you like to hit?" << std::endl;
-				std::cout << "Yes : y or No : n -------- ";
-				std::cin >> response;
+				while (choose){
+					char response = '\0';
+					std::cout << "Would you like to hit?" << std::endl;
+					std::cout << "Yes : y or No : n -------- ";
+					std::cin >> response;
 
-				if (response != 'y' && response != 'n'){
-					std::cout << "Error in response please try again." << std::endl;
-					/*Need to loop back to the response*/
-				}
-				else if (response == 'y'){
-					std::cout << "You drew a card." << std::endl;
-					field->drawDealerCard();
-
-					/*Print current cards*/
-					field->printField();
-
-					/*Check if game is over*/
-					if (!field->checkDealerValid()){
-						currentState = game_s_loss;
+					if (response != 'y' && response != 'n'){
+						std::cout << "Error in response please try again." << std::endl;
+						/*Need to loop back to the response*/
 					}
-					else{
+					else if (response == 'y'){
+						std::cout << "You drew a card." << std::endl;
+						field->drawDealerCard();
+
+						/*Print current cards*/
+						field->printField();
+
+						/*Check if game is over*/
+						if (!field->checkDealerValid()){
+							currentState = game_s_loss;
+						}
+					}
+					else {
+						std::cout << "You chose to stay with your current hand" << std::endl;
 						currentState = game_comp_scores_cs;
+						choose = false;
+						/*Send message to client that it is done choosing cards*/
+						char data[256] = "Done";
+						m_server->sendToClient(data, sizeof(data));
 					}
 				}
-				else {
-					std::cout << "You chose to stay with your current hand" << std::endl;
-					currentState = game_comp_scores_cs;
-				}
-
-				/*Send message to client that it is done choosing cards*/
-				char data[256] = "Done";
-				m_server->sendToClient(data, sizeof(data));
+				
 			}
 		}
-			break;
+							 break;
 
 		case game_client_hit:{
 			/*For the wireless side where the server plays next*/
@@ -432,7 +445,9 @@ int main(void){
 				std::cout << "Client: " << data << std::endl;
 				currentState = game_server_hit;
 			}
-			else{		
+			else{
+				bool choose = true;
+
 				field->drawPlayerCard();
 				field->drawPlayerCard();
 
@@ -443,51 +458,210 @@ int main(void){
 				/*Print current cards*/
 				field->printField();
 
-				char response = '/0';
-				std::cout << "Would you like to hit?" << std::endl;
+				char response = '\0';
+
+				while (choose){
+					std::cout << "Would you like to hit?" << std::endl;
+					std::cout << "Yes : y or No : n -------- ";
+					std::cin >> response;
+
+					if (response != 'y' && response != 'n'){
+						std::cout << "Error in response please try again." << std::endl;
+						/*Need to loop back to the response*/
+					}
+					else if (response == 'y'){
+						std::cout << "You drew a card." << std::endl;
+						field->drawPlayerCard();
+
+						/*Print current cards*/
+						field->printField();
+
+						/*Check if game is over*/
+						if (!field->checkPlayerValid()){
+							currentState = game_c_loss;
+						}
+					}
+					else {
+						std::cout << "You chose to stay with your current hand" << std::endl;
+						currentState = game_server_hit;
+						choose = false;
+						/*Send message to server that it is done choosing cards*/
+						char data[256] = "Done";
+						m_client->sendToServer(data, sizeof(data));
+					}
+				}
+			}
+		}
+							 break;
+
+		case game_c_loss:{
+			if (isServer){
+				blankScreen();
+
+				std::cout << "You won with a score of " << field->checkDealerTotal() << ". The client lost with score of " << otherScore << "." << std::endl;
+
+				char response = '\0';
+				std::cout << "Would you like to play again?" << std::endl;
 				std::cout << "Yes : y or No : n -------- ";
 				std::cin >> response;
 
 				if (response != 'y' && response != 'n'){
-					std::cout << "Error in response please try again." << std::endl;
-					/*Need to loop back to the response*/
+					std::cout << "Error in response exiting." << std::endl;
 				}
 				else if (response == 'y'){
-					std::cout << "You drew a card." << std::endl;
-					field->drawPlayerCard();
-
-					/*Print current cards*/
-					field->printField();
-
-					/*Check if game is over*/
-					if (!field->checkPlayerValid()){
-						currentState = game_c_loss;
-					}
-					else{
-						currentState = game_server_hit;
-					}
+					currentState = game_type_choice;
 				}
-				else {
-					std::cout << "You chose to stay with your current hand" << std::endl;
-					currentState = game_server_hit;
+				else{
+					std::cout << "Exiting" << std::endl;
+					/*Set done flag to exit out of the statemachine*/
+					done = true;
 				}
+			}
+			else{
+				blankScreen();
 
-				/*Send message to server that it is done choosing cards*/
-				char data[256] = "Done";
-				m_client->sendToServer(data, sizeof(data));
+				std::cout << "You lost with a score of " << field->checkPlayerTotal() << ". The host won with score of " << otherScore << "." << std::endl;
+
+				char response = '\0';
+				std::cout << "Would you like to play again?" << std::endl;
+				std::cout << "Yes : y or No : n -------- ";
+				std::cin >> response;
+
+				if (response != 'y' && response != 'n'){
+					std::cout << "Error in response exiting." << std::endl;
+				}
+				else if (response == 'y'){
+					currentState = game_type_choice;
+				}
+				else{
+					std::cout << "Exiting" << std::endl;
+					/*Set done flag to exit out of the statemachine*/
+					done = true;
+				}
 			}
 		}
-			break;
-
-		case game_c_loss:{
-
-		}
-			break;
+						 break;
 
 		case game_s_loss:{
+			if (isServer){
+				blankScreen();
 
+				std::cout << "You lost with a score of " << field->checkDealerTotal() << ". The client won with score of " << otherScore << "." << std::endl;
+
+				char response = '\0';
+				std::cout << "Would you like to play again?" << std::endl;
+				std::cout << "Yes : y or No : n -------- ";
+				std::cin >> response;
+
+				if (response != 'y' && response != 'n'){
+					std::cout << "Error in response exiting." << std::endl;
+				}
+				else if (response == 'y'){
+					currentState = game_type_choice;
+				}
+				else{
+					std::cout << "Exiting" << std::endl;
+					/*Set done flag to exit out of the statemachine*/
+					done = true;
+				}
+			}
+			else{
+				blankScreen();
+
+				std::cout << "You won with a score of " << field->checkPlayerTotal() << ". The host won with score of " << otherScore << "." << std::endl;
+
+				char response = '\0';
+				std::cout << "Would you like to play again?" << std::endl;
+				std::cout << "Yes : y or No : n -------- ";
+				std::cin >> response;
+
+				if (response != 'y' && response != 'n'){
+					std::cout << "Error in response exiting." << std::endl;
+				}
+				else if (response == 'y'){
+					currentState = game_type_choice;
+				}
+				else{
+					std::cout << "Exiting" << std::endl;
+					/*Set done flag to exit out of the statemachine*/
+					done = true;
+				}
+			}
 		}
-			break;
+						 break;
+
+		case game_comp_scores_cs:{
+			/*Check both scores at the end of the hit rounds*/
+			if (isServer){
+				/*Send the score of the dealer/host to the client*/
+				char data[2];
+				data[0] = (char)field->checkDealerTotal();
+				m_server->sendToClient(data, sizeof(data));
+
+				unsigned char i = 0;
+				while (!m_server->retrieveFromClient(data, sizeof(data))){
+					std::cout << "Waiting";
+					for (char j = 0; j < i; j++){
+						std::cout << ".";
+					}
+					if (i < 4){
+						i = i + 1;
+					}
+					else{
+						i = 0;
+					}
+					std::cout << std::endl;
+				}
+
+				if (data[0] == 's'){
+					currentState = game_s_loss;
+				}
+				else{
+					currentState = game_c_loss;
+				}
+
+				otherScore = (int)data[1];
+			}
+			else{
+				char data[2];
+				unsigned char i = 0;
+				while (!m_client->retrieveFromServer(data, sizeof(data))){
+					std::cout << "Waiting";
+					for (char j = 0; j < i; j++){
+						std::cout << ".";
+					}
+					if (i < 4){
+						i = i + 1;
+					}
+					else{
+						i = 0;
+					}
+					std::cout << std::endl;
+				}
+
+				otherScore = (int)data[0];
+
+				if (data[0] <= field->checkPlayerTotal()){
+					/*Dealer/Host lost*/
+					currentState = game_s_loss;
+
+					data[0] = 's';
+					data[1] = (char)field->checkPlayerTotal();
+					m_client->sendToServer(data, sizeof(data));
+				}
+				else{
+					/*Client lost*/
+					currentState = game_c_loss;
+
+					data[0] = 'c';
+					data[1] = (char)field->checkPlayerTotal();
+					m_client->sendToServer(data, sizeof(data));
+				}
+			}
+		}
+						 break;
+		}
+
 	}
 
 	/*Clean up memory leaks*/

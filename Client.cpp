@@ -21,7 +21,7 @@ bool Client::connectToServer(){
 
 
 bool Client::retrieveFromServer(char* location, int lenLocation){
-	if (recv(client, location, lenLocation, NULL) != 0){
+	if (recv(client, location, lenLocation, NULL) <= 0){
 		return false;
 	}
 	else{
