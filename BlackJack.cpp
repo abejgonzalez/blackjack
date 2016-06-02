@@ -708,13 +708,6 @@ void init(){
 	currentState = opening;
 }
 
-void blankScreen(){
-	/*Adds an extra amount of spaces to clear the screen*/
-	for (int i = 0; i < 50; i++){
-		std::cout << '\n';
-	}
-}
-
 void winsockInit(){
 	/*Winsock Startup*/
 	WSAData wsaData;
